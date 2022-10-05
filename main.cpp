@@ -347,6 +347,12 @@ int main(int argc, char *argv[])
             }
             else if (j["method"] == "engine_getPayloadV1" || j["method"] == "engine_newPayloadV1") // both of these are safe to pass to the EE
             {
+                spdlog::debug("Returning syncing response to newPayload");
+                json jresponse = json::parse("{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{\"payloadStatus\":{\"status\":\"SYNCING\",\"latestValidHash\":null,\"validationError\":null},\"payloadId\":null}}");
+                jresponse["id"] = j["id"];
+                response->write(status_code_to_enum[200], jresponse.dump());
+                return;
+                /*
                 // we can just forward this request to the node
                 spdlog::trace("engine_getPayloadV1 or engine_newPayloadV1 called by client CL, forwarding to node");
                 cpr::Header headers;
@@ -360,6 +366,7 @@ int main(int argc, char *argv[])
                 cpr::Response r = cpr::Post(node, cpr::Body{j.dump()}, headers, create_bearer_jwt(jwt));
                 response->write(status_code_to_enum[r.status_code], r.text);
                 return;
+                */
             }
             else
             {
