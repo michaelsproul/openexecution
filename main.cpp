@@ -345,10 +345,10 @@ int main(int argc, char *argv[])
                     return;
                 }
             }
-            else if (j["method"] == "engine_getPayloadV1" || j["method"] == "engine_newPayloadV1") // both of these are safe to pass to the EE
+            else if (j["method"] == "engine_newPayloadV1")
             {
                 spdlog::debug("Returning syncing response to newPayload");
-                json jresponse = json::parse("{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{\"payloadStatus\":{\"status\":\"SYNCING\",\"latestValidHash\":null,\"validationError\":null},\"payloadId\":null}}");
+                json jresponse = json::parse("{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{\"status\":\"SYNCING\",\"latestValidHash\":null,\"validationError\":null}}");
                 jresponse["id"] = j["id"];
                 response->write(status_code_to_enum[200], jresponse.dump());
                 return;
